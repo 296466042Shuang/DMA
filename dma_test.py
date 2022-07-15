@@ -27,12 +27,15 @@ class PlotData:
     def load(self, path:Path):
         """Load file."""
         self.file = classi.o11dma(str(path))
+        '获取time数据'
         self.file.t = self.file.getChannel('Time')
+        ''
         self.file.y = self.file.getChannel(self.mode.value)
         self.file.y_corrected = self.file.get_corrected()
     
     def plot_time(self):
         """Plot data in time."""
+        'ax表示每个子图，可以通过索引值访问'
         fig,ax = plt.subplots()
         self.file.plot(ax,trend=True)                
         plt.legend()
@@ -78,8 +81,14 @@ class PlotData:
             self.file.fake(axs[2][i],deg=self.degree.value,smoothness=1,noiselevel = i*3, noisetype = 2)
         for i in range(6):
             self.file.fake(axs[3][i],deg=self.degree.value,smoothness=1,noiselevel = i*3, noisetype = 3)
-        
-            
+
+    def phase(self):
+        fif,ax= plt.subplots(1,len(self.file.start))
+        self.file.calculate_phase(ax,deg=self.degree.value)
+
+    def amplitude(self):
+        fig,ax=plt.subplots(1,len(self.file.start))
+        self.file.calculate_amplitude(ax,deg=self.degree.value)
 if __name__ == "__main__":
     ui = PlotData()
     ui.show()
